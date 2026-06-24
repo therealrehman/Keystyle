@@ -5,51 +5,36 @@ import android.view.View
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LifecycleRegistry
-import androidx.lifecycle.ViewModelStore
-import androidx.lifecycle.ViewModelStoreOwner
-import androidx.lifecycle.setViewTreeLifecycleOwner
-import androidx.lifecycle.setViewTreeViewModelStoreOwner
-import androidx.savedstate.SavedStateRegistry
-import androidx.savedstate.SavedStateRegistryOwner
-import androidx.savedstate.setViewTreeSavedStateRegistryOwner
 import com.keycafe.keyboard.engine.KeyAction
 import com.keycafe.keyboard.engine.KeyboardViewModel
+import com.keycafe.keyboard.engine.LayoutType
+import com.keycafe.keyboard.theme.KeyboardTheme
+import com.keycafe.keyboard.theme.ThemeManager
+import com.keycafe.keyboard.animation.RippleEngine
 import com.keycafe.keyboard.ui.KeyboardScreen
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class CoreImeService : InputMethodService(), 
-    LifecycleOwner, ViewModelStoreOwner, SavedStateRegistryOwner {
+class CoreImeService : InputMethodService() {
 
-    @Inject lateinit var viewModel: KeyboardViewModel
+    // Hilt field injection works for Singletons
+    @Inject lateinit var themeManager: ThemeManager
+    @Inject lateinit var rippleEngine: RippleEngine
     
-    private val lifecycleRegistry = LifecycleRegistry(this)
-    private val store = ViewModelStore()
-    private val savedStateRegistryController = SavedStateRegistryOwner::class.java.getDeclaredConstructor().newInstance() as SavedStateRegistryOwner
-
-    override val lifecycle: Lifecycle get() = lifecycleRegistry
-    override val viewModelStore: ViewModelStore get() = store
-    override val savedStateRegistry: SavedStateRegistry get() = savedStateRegistryController.savedStateRegistry
-
-    override fun onCreate() {
-        super.onCreate()
-        lifecycleRegistry.currentState = Lifecycle.State.CREATED
-    }
+    // ViewModel ko directly instantiate karte hain (IME mein Hilt ViewModel injection complex hota hai)
+    private val viewModel = KeyboardViewModel()
 
     override fun onCreateInputView(): View {
         return ComposeView(this).apply {
-            setViewTreeLifecycleOwner(this@CoreImeService)
-            setViewTreeViewModelStoreOwner(this@CoreImeService)
-            setViewTreeSavedStateRegistryOwner(this@CoreImeService)
-            
             setContent {
                 val state by viewModel.uiState.collectAsState()
+                val theme by themeManager.currentTheme.collectAsState(initial = KeyboardTheme.DEFAULT)
+                
                 KeyboardScreen(
                     state = state,
+                    theme = theme,
+                    rippleEngine = rippleEngine,
                     onKeyAction = { action -> handleKeyAction(action) }
                 )
             }
@@ -63,14 +48,9 @@ class CoreImeService : InputMethodService(),
             KeyAction.Enter -> currentInputConnection.performEditorAction(android.view.inputmethod.EditorInfo.IME_ACTION_UNSPECIFIED)
             KeyAction.Space -> currentInputConnection.commitText(" ", 1)
             KeyAction.ShiftToggle -> viewModel.toggleShift()
-            KeyAction.SwitchToSymbols -> viewModel.switchLayout(com.keycafe.keyboard.engine.LayoutType.SYMBOLS)
-            KeyAction.SwitchToNumbers -> viewModel.switchLayout(com.keycafe.keyboard.engine.LayoutType.NUMBERS)
-            KeyAction.SwitchToQwerty -> viewModel.switchLayout(com.keycafe.keyboard.engine.LayoutType.QWERTY)
+            KeyAction.SwitchToSymbols -> viewModel.switchLayout(LayoutType.SYMBOLS)
+            KeyAction.SwitchToNumbers -> viewModel.switchLayout(LayoutType.NUMBERS)
+            KeyAction.SwitchToQwerty -> viewModel.switchLayout(LayoutType.QWERTY)
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        lifecycleRegistry.currentState = Lifecycle.State.DESTROYED
     }
 }
