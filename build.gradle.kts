@@ -29,9 +29,9 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
-    // ✅ FIX 1: kotlinOptions ki jagah compilerOptions use karo
-    compilerOptions {
-        jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_1_8
+    // ✅ Sahi jagah: app module ke andar
+    kotlinOptions {
+        jvmTarget = "1.8"
     }
     buildFeatures { compose = true }
 }
@@ -45,7 +45,7 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
-    implementation(libs.androidx.material.icons.extended)  // ✅ Ab yeh kaam karega
+    implementation(libs.androidx.material.icons.extended)
 
     // Hilt
     implementation(libs.hilt.android)
