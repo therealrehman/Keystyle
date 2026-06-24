@@ -20,7 +20,7 @@ fun KeyboardScreen(
     rippleEngine: RippleEngine,
     onKeyAction: (KeyAction) -> Unit
 ) {
-    val rippleConfig = RippleConfig() // Default config, later from settings
+    val rippleConfig = RippleConfig()
 
     Box(
         modifier = Modifier
@@ -52,7 +52,6 @@ fun KeyboardScreen(
             }
         }
 
-        // Animation Overlay (Top Layer)
         RippleOverlay(
             engine = rippleEngine,
             modifier = Modifier.matchParentSize()
@@ -61,11 +60,27 @@ fun KeyboardScreen(
 }
 
 private fun getQwertyRows(isUpper: Boolean): List<List<KeyDefinition>> {
-    val q = "qwertyuiop".map { KeyDefinition(if (isUpper) it.uppercase() else it.toString(), KeyAction.CommitText(if (isUpper) it.uppercase() else it.toString())) }
-    val a = "asdfghjkl".map { KeyDefinition(if (isUpper) it.uppercase() else it.toString(), KeyAction.CommitText(if (isUpper) it.uppercase() else it.toString())) }
+    val q = "qwertyuiop".map { 
+        KeyDefinition(
+            if (isUpper) it.uppercase() else it.toString(), 
+            KeyAction.CommitText(if (isUpper) it.uppercase() else it.toString())
+        ) 
+    }
+    val a = "asdfghjkl".map { 
+        KeyDefinition(
+            if (isUpper) it.uppercase() else it.toString(), 
+            KeyAction.CommitText(if (isUpper) it.uppercase() else it.toString())
+        ) 
+    }
+    val z = "zxcvbnm".map { 
+        KeyDefinition(
+            if (isUpper) it.uppercase() else it.toString(), 
+            KeyAction.CommitText(if (isUpper) it.uppercase() else it.toString())
+        ) 
+    }
     val zRow = listOf(
-        KeyDefinition("⇧", KeyAction.ShiftToggle, 1.5f, true),
-        *"zxcvbnm".map { KeyDefinition(if (isUpper) it.uppercase() else it.toString(), KeyAction.CommitText(if (isUpper) it.uppercase() else it.toString())) }.toTypedArray(),
+        KeyDefinition("⇧", KeyAction.ShiftToggle, 1.5f, true)
+    ) + z + listOf(
         KeyDefinition("⌫", KeyAction.Backspace, 1.5f, true)
     )
     val bottom = listOf(
@@ -77,5 +92,55 @@ private fun getQwertyRows(isUpper: Boolean): List<List<KeyDefinition>> {
     )
     return listOf(q, a, zRow, bottom)
 }
-private fun getSymbolRows(): List<List<KeyDefinition>> = listOf(listOf(KeyDefinition("!", KeyAction.CommitText("!"))))
-private fun getNumberRows(): List<List<KeyDefinition>> = listOf(listOf(KeyDefinition("1", KeyAction.CommitText("1"))))
+
+private fun getSymbolRows(): List<List<KeyDefinition>> = listOf(
+    listOf("1","2","3","4","5","6","7","8","9","0").map { 
+        KeyDefinition(it, KeyAction.CommitText(it)) 
+    },
+    listOf("!","@","#","$","%","^","&","*","(",")").map { 
+        KeyDefinition(it, KeyAction.CommitText(it)) 
+    },
+    listOf(
+        KeyDefinition("ABC", KeyAction.SwitchToQwerty, 1.5f, true),
+        KeyDefinition("-", KeyAction.CommitText("-")),
+        KeyDefinition("+", KeyAction.CommitText("+")),
+        KeyDefinition("=", KeyAction.CommitText("=")),
+        KeyDefinition("/", KeyAction.CommitText("/")),
+        KeyDefinition("_", KeyAction.CommitText("_")),
+        KeyDefinition("⌫", KeyAction.Backspace, 1.5f, true)
+    ),
+    listOf(
+        KeyDefinition("123", KeyAction.SwitchToNumbers, 1.5f, true),
+        KeyDefinition(",", KeyAction.CommitText(",")),
+        KeyDefinition(" ", KeyAction.Space, 4f),
+        KeyDefinition(".", KeyAction.CommitText(".")),
+        KeyDefinition("↵", KeyAction.Enter, 1.5f, true)
+    )
+)
+
+private fun getNumberRows(): List<List<KeyDefinition>> = listOf(
+    listOf("1","2","3","4","5","6","7","8","9","0").map { 
+        KeyDefinition(it, KeyAction.CommitText(it)) 
+    },
+    listOf(
+        KeyDefinition("+", KeyAction.CommitText("+")),
+        KeyDefinition("-", KeyAction.CommitText("-")),
+        KeyDefinition("×", KeyAction.CommitText("×")),
+        KeyDefinition("÷", KeyAction.CommitText("÷")),
+        KeyDefinition("=", KeyAction.CommitText("=")),
+        KeyDefinition("%", KeyAction.CommitText("%")),
+        KeyDefinition(".", KeyAction.CommitText(".")),
+        KeyDefinition("(", KeyAction.CommitText("(")),
+        KeyDefinition(")", KeyAction.CommitText(")")),
+        KeyDefinition("^", KeyAction.CommitText("^"))
+    ),
+    listOf(
+        KeyDefinition("ABC", KeyAction.SwitchToQwerty, 1.5f, true),
+        KeyDefinition("⌫", KeyAction.Backspace, 1.5f, true)
+    ),
+    listOf(
+        KeyDefinition("?123", KeyAction.SwitchToSymbols, 1.5f, true),
+        KeyDefinition(" ", KeyAction.Space, 4f),
+        KeyDefinition("↵", KeyAction.Enter, 1.5f, true)
+    )
+)

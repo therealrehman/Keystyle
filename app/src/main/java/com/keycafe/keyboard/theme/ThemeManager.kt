@@ -1,20 +1,16 @@
 package com.keycafe.keyboard.theme
 
-import com.keycafe.keyboard.data.ThemeRepository
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class ThemeManager @Inject constructor(
-    private val repository: ThemeRepository
-) {
-    val currentTheme: Flow<KeyboardTheme> = repository.activeThemeId.map { id ->
-        repository.getBuiltInThemes().find { it.id == id } ?: KeyboardTheme.DEFAULT
-    }
+class ThemeManager @Inject constructor() {
+    private val _currentTheme = MutableStateFlow(KeyboardTheme.DEFAULT)
+    val currentTheme = _currentTheme.asStateFlow()
 
-    suspend fun applyTheme(themeId: String) {
-        repository.setActiveTheme(themeId)
+    fun setTheme(theme: KeyboardTheme) {
+        _currentTheme.value = theme
     }
 }

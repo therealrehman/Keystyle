@@ -18,12 +18,12 @@ class ThemeRepository @Inject constructor(
         val ACTIVE_THEME_ID = stringPreferencesKey("active_theme_id")
     }
 
-    val activeThemeId: Flow<String> = context.dataStore.data.map { 
-        it[ACTIVE_THEME_ID] ?: KeyboardTheme.DEFAULT.id 
+    val activeThemeId: Flow<String> = context.keyboardDataStore.data.map {
+        it[ACTIVE_THEME_ID] ?: KeyboardTheme.DEFAULT.id
     }
 
     suspend fun setActiveTheme(themeId: String) {
-        context.dataStore.edit { it[ACTIVE_THEME_ID] = themeId }
+        context.keyboardDataStore.edit { it[ACTIVE_THEME_ID] = themeId }
     }
 
     fun getBuiltInThemes(): List<KeyboardTheme> = listOf(

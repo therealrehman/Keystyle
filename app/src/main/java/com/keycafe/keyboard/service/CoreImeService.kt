@@ -2,6 +2,7 @@ package com.keycafe.keyboard.service
 
 import android.inputmethodservice.InputMethodService
 import android.view.View
+import androidx.activity.viewModels
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
@@ -18,19 +19,17 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class CoreImeService : InputMethodService() {
 
-    // Hilt field injection works for Singletons
     @Inject lateinit var themeManager: ThemeManager
     @Inject lateinit var rippleEngine: RippleEngine
-    
-    // ViewModel ko directly instantiate karte hain (IME mein Hilt ViewModel injection complex hota hai)
-    private val viewModel = KeyboardViewModel()
+
+    private val viewModel: KeyboardViewModel by viewModels()
 
     override fun onCreateInputView(): View {
         return ComposeView(this).apply {
             setContent {
                 val state by viewModel.uiState.collectAsState()
                 val theme by themeManager.currentTheme.collectAsState(initial = KeyboardTheme.DEFAULT)
-                
+
                 KeyboardScreen(
                     state = state,
                     theme = theme,
