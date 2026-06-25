@@ -14,7 +14,7 @@ import javax.inject.Singleton
 
 @Singleton
 class LayoutRepository @Inject constructor(
-    @ApplicationContext private val context: Context
+    @ApplicationContext context: Context
 ) {
     companion object {
         private val ACTIVE_LAYOUT_JSON = stringPreferencesKey("active_layout_json")
@@ -22,15 +22,15 @@ class LayoutRepository @Inject constructor(
 
     private val json = Json { ignoreUnknownKeys = true; prettyPrint = true }
 
-    val activeLayout: Flow<CustomLayout> = context.keyboardDataStore.data.map { prefs ->
+    val activeLayout: Flow<CustomLayout> = context.dataStore.data.map { prefs ->
         val jsonStr = prefs[ACTIVE_LAYOUT_JSON]
         if (!jsonStr.isNullOrEmpty()) {
-            try { json.decodeFromString(jsonStr) }
+            try { json.decodeFromString(jsonStr) } 
             catch (_: Exception) { CustomLayout() }
         } else CustomLayout()
     }
 
     suspend fun saveActiveLayout(layout: CustomLayout) {
-        context.keyboardDataStore.edit { it[ACTIVE_LAYOUT_JSON] = json.encodeToString(layout) }
+        context.dataStore.edit { it[ACTIVE_LAYOUT_JSON] = json.encodeToString(layout) }
     }
 }

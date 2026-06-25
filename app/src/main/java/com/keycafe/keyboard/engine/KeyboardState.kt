@@ -21,5 +21,6 @@ sealed interface KeyAction {
     data object SwitchToSymbols : KeyAction
     data object SwitchToNumbers : KeyAction
     data object SwitchToQwerty : KeyAction
+    data object StartVoiceInput : KeyAction
     data class CommitText(val text: String) : KeyAction
 }

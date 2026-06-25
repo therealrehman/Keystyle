@@ -29,9 +29,7 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
+    kotlinOptions { jvmTarget = "1.8" }
     buildFeatures { compose = true }
 }
 
@@ -45,10 +43,12 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.androidx.material.icons.extended)
-
+    
+    // Hilt
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
-
+    
+    // Data & Serialization
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.kotlinx.serialization.json)
 }
