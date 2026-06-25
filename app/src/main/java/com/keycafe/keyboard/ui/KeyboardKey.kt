@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -20,7 +21,7 @@ import com.keycafe.keyboard.engine.KeyAction
 import com.keycafe.keyboard.theme.KeyboardTheme
 
 @Composable
-fun KeyboardKey(
+fun RowScope.KeyboardKey(
     key: KeyDefinition,
     theme: KeyboardTheme,
     onKeyAction: (KeyAction) -> Unit,

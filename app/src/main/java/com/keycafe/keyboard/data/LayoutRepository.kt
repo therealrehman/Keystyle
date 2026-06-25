@@ -14,7 +14,7 @@ import javax.inject.Singleton
 
 @Singleton
 class LayoutRepository @Inject constructor(
-    @ApplicationContext context: Context
+    @ApplicationContext private val context: Context
 ) {
     companion object {
         private val ACTIVE_LAYOUT_JSON = stringPreferencesKey("active_layout_json")

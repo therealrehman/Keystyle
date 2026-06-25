@@ -2,6 +2,7 @@ package com.keycafe.keyboard.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -23,7 +24,7 @@ import com.keycafe.keyboard.theme.KeyboardTheme
 import kotlinx.coroutines.launch
 
 @Composable
-fun RippleKeyboardKey(
+fun RowScope.RippleKeyboardKey(
     key: KeyDefinition,
     theme: KeyboardTheme,
     rippleEngine: RippleEngine,

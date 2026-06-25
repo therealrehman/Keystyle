@@ -16,7 +16,7 @@ class EmojiRepository @Inject constructor(
         EmojiItem("😂", "face with tears of joy", "SMILEYS"),
         EmojiItem("❤️", "red heart", "SMILEYS"),
         EmojiItem("👍", "thumbs up", "PEOPLE"),
-        EmojiItem("", "cat face", "ANIMALS"),
+        EmojiItem("🐱", "cat face", "ANIMALS"),
         EmojiItem("🍕", "pizza", "FOOD"),
         EmojiItem("✈️", "airplane", "TRAVEL"),
         EmojiItem("💡", "light bulb", "OBJECTS"),

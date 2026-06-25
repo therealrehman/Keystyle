@@ -8,7 +8,6 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStore
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.setViewTreeLifecycleOwner
@@ -29,16 +28,16 @@ import javax.inject.Inject
 class CoreImeService : InputMethodService(),
     LifecycleOwner, ViewModelStoreOwner, SavedStateRegistryOwner {
 
-    // FIX: @HiltViewModel classes must be obtained through a ViewModelProvider
-    // (since ViewModel's lifecycle/retention is what the provider manages),
-    // not via plain @Inject field injection. ThemeManager and RippleEngine
-    // are plain @Singleton classes, so they ARE correctly field-injectable.
+    // FIX: KeyboardViewModel is now a plain @Singleton @Inject-constructor
+    // class (not a @HiltViewModel), so it's injected directly as a field --
+    // no ViewModelProvider/ViewModelProvider.Factory needed. That machinery
+    // is designed for Activity/Fragment scopes where Hilt auto-generates the
+    // factory binding; InputMethodService (a plain Service) does not get
+    // that binding and would fail Hilt's compile-time validation.
     @Inject lateinit var themeManager: ThemeManager
     @Inject lateinit var rippleEngine: RippleEngine
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject lateinit var viewModel: KeyboardViewModel
     @Inject lateinit var voiceInputHelper: com.keycafe.keyboard.voice.VoiceInputHelper
-
-    private lateinit var viewModel: KeyboardViewModel
 
     private val lifecycleRegistry = LifecycleRegistry(this)
     private val store = ViewModelStore()
@@ -59,7 +58,6 @@ class CoreImeService : InputMethodService(),
         super.onCreate()
         savedStateRegistryController.performRestore(null)
         lifecycleRegistry.currentState = Lifecycle.State.CREATED
-        viewModel = ViewModelProvider(this, viewModelFactory)[KeyboardViewModel::class.java]
     }
 
     override fun onCreateInputView(): View {
