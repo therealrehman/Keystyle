@@ -41,16 +41,12 @@ fun ThemeStudioScreen(onBack: () -> Unit) {
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 listOf(Color.Black, Color(0xFF1C1B1F), Color(0xFF2D2C31), Color.White).forEach { color ->
                     Box(
-                        Modifier.size(48.dp).padding(2.dp),
-                        contentAlignment = androidx.compose.ui.Alignment.Center
-                    ) {
-                        androidx.compose.foundation.BorderStroke(2.dp, Color.Gray)
-                        androidx.compose.foundation.layout.Box(
-                            modifier = Modifier.fillMaxSize()
-                                .then(androidx.compose.foundation.border(androidx.compose.foundation.BorderStroke(2.dp, Color.Gray), androidx.compose.foundation.shape.CircleShape))
-                                .background(color, androidx.compose.foundation.shape.CircleShape)
-                        )
-                    }
+                        modifier = Modifier
+                            .size(48.dp)
+                            .padding(2.dp)
+                            .border(2.dp, Color.Gray, androidx.compose.foundation.shape.CircleShape)
+                            .background(color, androidx.compose.foundation.shape.CircleShape)
+                    )
                 }
             }
             
