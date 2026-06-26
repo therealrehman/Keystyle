@@ -13,9 +13,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun HomeScreen(onNavigateToSettings: () -> Unit) {
+fun HomeScreen(
+    onNavigateToSettings: () -> Unit,
+    micPermissionGranted: Boolean = true,
+    onRequestMicPermission: () -> Unit = {}
+) {
     val context = LocalContext.current
-    
+
     Column(
         modifier = Modifier.fillMaxSize().padding(24.dp),
         verticalArrangement = Arrangement.Center,
@@ -24,18 +28,35 @@ fun HomeScreen(onNavigateToSettings: () -> Unit) {
         Text("KeyStyle Keyboard", fontSize = 32.sp, style = MaterialTheme.typography.headlineLarge)
         Spacer(Modifier.height(8.dp))
         Text("Customize your typing experience", style = MaterialTheme.typography.bodyLarge, textAlign = TextAlign.Center)
-        
+
         Spacer(Modifier.height(48.dp))
-        
+
         Button(
             onClick = { context.startActivity(Intent(Settings.ACTION_INPUT_METHOD_SETTINGS)) },
             modifier = Modifier.fillMaxWidth().height(56.dp)
         ) {
             Text("Enable Keyboard in Settings", fontSize = 18.sp)
         }
-        
+
         Spacer(Modifier.height(16.dp))
-        
+
+        // FIX: this was previously in MainActivity directly. Voice input
+        // (the keyboard's mic button) silently fails without this
+        // permission being granted once from the app -- an IME service
+        // cannot request runtime permissions itself.
+        OutlinedButton(
+            onClick = onRequestMicPermission,
+            enabled = !micPermissionGranted,
+            modifier = Modifier.fillMaxWidth().height(56.dp)
+        ) {
+            Text(
+                if (micPermissionGranted) "Microphone access granted" else "Allow microphone for voice typing",
+                fontSize = 16.sp
+            )
+        }
+
+        Spacer(Modifier.height(16.dp))
+
         OutlinedButton(
             onClick = onNavigateToSettings,
             modifier = Modifier.fillMaxWidth().height(56.dp)

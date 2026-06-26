@@ -1,5 +1,6 @@
 package com.keycafe.keyboard.ui.builder
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -29,9 +30,10 @@ fun KeyboardBuilderScreen(onBack: () -> Unit) {
         Column(modifier = Modifier.padding(padding).padding(16.dp)) {
             Text("Tap a key to select, then adjust width.", style = MaterialTheme.typography.bodyMedium)
             Spacer(Modifier.height(16.dp))
-            
+
             // Visual representation of rows
-            layout.rows.forEach { row ->
+            // FIX: CustomLayout's field is named `keys`, not `rows`.
+            layout.keys.forEach { row ->
                 Row(modifier = Modifier.fillMaxWidth().height(50.dp)) {
                     row.forEach { key ->
                         Box(
@@ -39,7 +41,7 @@ fun KeyboardBuilderScreen(onBack: () -> Unit) {
                                 .weight(key.widthWeight)
                                 .padding(2.dp)
                                 .background(
-                                    if (key.id == selectedKeyId) MaterialTheme.colorScheme.primary 
+                                    if (key.id == selectedKeyId) MaterialTheme.colorScheme.primary
                                     else MaterialTheme.colorScheme.surfaceVariant,
                                     MaterialTheme.shapes.small
                                 ),
@@ -50,9 +52,9 @@ fun KeyboardBuilderScreen(onBack: () -> Unit) {
                     }
                 }
             }
-            
+
             Spacer(Modifier.height(24.dp))
-            
+
             if (selectedKeyId != null) {
                 Text("Selected Key Width", style = MaterialTheme.typography.titleMedium)
                 Slider(value = 1f, onValueChange = { /* Update key width */ }, valueRange = 0.5f..4f)
